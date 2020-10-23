@@ -40,8 +40,8 @@ custom:
   s3BucketName: ${self:custom.client.bucketName}
 
 # you can overwrite defaults here
-#  stage: dev
-#  region: us-east-1
+  stage: DEV
+  region: eu-west-1
 
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
