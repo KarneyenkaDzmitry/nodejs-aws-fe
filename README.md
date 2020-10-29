@@ -3,7 +3,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## Available Scripts
 
 In the project directory, you can run:  
-You can use NPM instead of YARN (Up to you)  
+You can use NPM instead of YARN (Up to you)
 
 ### `yarn start`
 
@@ -38,8 +38,43 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
+### Others (related to Serverless framework and its plugins)
+
+| "Script Name" : "CLI commands"                                                                          | Description |
+| ------------------------------------------------------------------------------------------------------- | ----------- |
+| `"deploy:s3": "serverless client deploy --no-config-change --no-policy-change --no-cors-change"`        | deploy      |
+| `"build:deploy": "npm run build && npm run deploy:s3"`                                                  |             |
+| `"client:deploy": "sls client deploy --no-config-change --no-policy-change --no-cors-change"`           |             |
+| `"client:deploy:nc": "npm run client:deploy -- --no-confirm"`                                           |             |
+| `"client:build:deploy": "npm run build && npm run client:deploy"`                                       |             |
+| `"client:build:deploy:nc": "npm run build && npm run client:deploy:nc"`                                 |             |
+| `"cloudfront:setup": "sls deploy"`                                                                      |             |
+| `"cloudfront:domainInfo": "sls domainInfo"`                                                             |             |
+| `"cloudfront:invalidateCache": "sls invalidateCloudFrontCache"`                                         |             |
+| `"cloudfront:build:deploy": "npm run client:build:deploy && npm run cloudfront:invalidateCache"`        |             |
+| `"cloudfront:build:deploy:nc": "npm run client:build:deploy:nc && npm run cloudfront:invalidateCache"`  |             |
+| `"cloudfront:update:build:deploy": "npm run cloudfront:setup && npm run cloudfront:build:deploy"`       |             |
+| `"cloudfront:update:build:deploy:nc": "npm run cloudfront:setup && npm run cloudfront:build:deploy:nc"` |             |
+
+## Notes
+
+| Instal Pluggin - Description                                             | Command                                                                                                                                                       |
+| ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Download ain install the aws-node-single-page-app-via-cloudfront pluggin | `serverless install -u https://github.com/serverless/examples/tree/master/aws-node-single-page-app-via-cloudfront -n aws-node-single-page-app-via-cloudfront` |
+
 ## Learn More
 
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+## Known Issues
+
+1. `Type Error ---------------------------------------------`</br>
+   `TypeError: Cannot read property 'toString' of null` `at ServerlessPlugin.runAwsCommand (C:\Users\Dzmitry_Karneyenka\OneDrive - EPAM\BackUp\AWS and Nodejs\nodejs-aws-fe\serverless-single-page-app-plugin\index.js:48:34)` `at ServerlessPlugin.invalidateCache (C:\Users\Dzmitry_Karneyenka\OneDrive - EPAM\BackUp\AWS and Nodejs\nodejs-aws-fe\serverless-single-page-app-plugin\index.js:135:30)`</br>.
+   `For debugging logs, run again after setting the "SLS_DEBUG=*" environment variable.` </br>
+   Solutions: In serverless-single-page-app-plugin/index.js add shell:true option when spawnSync.</br>
+   from: `const result = spawnSync(command, args);`</br>
+   to: `const result = spawnSync(command, args, {shell: true});`</br>
+   [Nodejs Documentation](https://nodejs.org/docs/latest-v12.x/api/child_process.html#child_process_child_process_spawnsync_command_args_options);
+2. More
