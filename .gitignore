@@ -10,7 +10,13 @@ node_modules
 
 # production
 build
+
+# package directories
+jspm_packages
+
+# Serverless directories
 .serverless
+aws-node-single-page-app-via-cloudfront
 
 # misc
 .DS_Store
@@ -25,3 +31,4 @@ yarn-error.log*
 
 /.idea
 .vscode
+*.log
