@@ -6,7 +6,7 @@ const API_PATHS = {
   },
   product: 'https://ee4r4m00wc.execute-api.eu-west-1.amazonaws.com/dev',
   order: 'https://ee4r4m00wc.execute-api.eu-west-1.amazonaws.com/dev',
-  import: 'https://ky0q1mxzxj.execute-api.eu-west-1.amazonaws.com/dev',
+  import: 'https://6bli2nbdj9.execute-api.eu-west-1.amazonaws.com/dev',
   bff: 'https://ee4r4m00wc.execute-api.eu-west-1.amazonaws.com/dev'
 };
 

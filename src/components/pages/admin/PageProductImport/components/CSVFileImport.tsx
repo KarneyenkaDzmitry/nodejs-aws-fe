@@ -2,12 +2,12 @@ import React, {useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import Typography from "@material-ui/core/Typography";
 import axios from 'axios';
-import mime from 'mime-types';
+// import mime from 'mime-types';
 
-// const headers = {
-//   // 'Content-Type': "text/csv",
-//   // "Access-Control-Allow-Origin": "*"
-// };
+const headers = {
+  'Content-Type': "text/csv",
+  "Access-Control-Allow-Origin": "*"
+};
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -53,10 +53,10 @@ export default function CSVFileImport({url, title}: CSVFileImportProps) {
     // const contentType = mime.lookup(file.name);
     // console.log(contentType);
     
-      const result = await fetch(response.data.url, {
+      const result = await fetch(response.data, {
         method: 'PUT',
-        body: file//,
-        // headers
+        body: file,
+        headers
       })
       console.log('Result: ', result)
       setFile('');
