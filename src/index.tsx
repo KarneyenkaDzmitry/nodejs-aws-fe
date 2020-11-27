@@ -12,9 +12,9 @@ axios.interceptors.response.use(
   response => {
     return response;
   },
-  function(error) {
-    if (error.response.status === 400) {
-      alert(error.response.data?.data);
+  function (error) {
+    if (/^40[013]$/.test(error.response.status)) {
+      alert(`Status: [${error.response.status}] - ${error.response.data?.message}`);
     }
     return Promise.reject(error.response);
   }

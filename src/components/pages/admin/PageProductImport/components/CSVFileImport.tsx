@@ -40,13 +40,27 @@ export default function CSVFileImport({url, title}: CSVFileImportProps) {
       
     try {
       // Get the presigned URL
+      let authorization_token = localStorage.getItem('authorization_token');
+      // eslint-disable-next-line
+      const rewrite = confirm('Would you like to reset the [authorization_token]?');
+      if (!authorization_token || rewrite) {
+          const username = prompt('Username', 'KarneyenkaDzmitry');
+          const password = prompt('Password', 'TEST_PASSWORD');
+          // eslint-disable-next-line
+          const save = confirm('Save [authorization_token] on Local Storage?');
+          authorization_token = `Basic ${Buffer.from(`${username}:${password}`).toString("base64")}`;
+        }
       const response = await axios({
         method: 'GET',
         url,
         params: {
           name: encodeURIComponent(file.name)
+        },
+        headers: {
+          Authorization: authorization_token
         }
       })
+
       console.log('File to upload: ', file.name)
       console.log('Uploading to: ', response.data)
     
