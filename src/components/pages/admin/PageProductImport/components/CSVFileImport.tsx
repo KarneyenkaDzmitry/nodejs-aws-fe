@@ -44,11 +44,13 @@ export default function CSVFileImport({url, title}: CSVFileImportProps) {
       // eslint-disable-next-line
       const rewrite = confirm('Would you like to reset the [authorization_token]?');
       if (!authorization_token || rewrite) {
+          // eslint-disable-next-line
           const username = prompt('Username', 'KarneyenkaDzmitry');
           const password = prompt('Password', 'TEST_PASSWORD');
           // eslint-disable-next-line
           const save = confirm('Save [authorization_token] on Local Storage?');
           authorization_token = `Basic ${Buffer.from(`${username}:${password}`).toString("base64")}`;
+          if (save) localStorage.setItem('authorization_token', authorization_token);
         }
       const response = await axios({
         method: 'GET',

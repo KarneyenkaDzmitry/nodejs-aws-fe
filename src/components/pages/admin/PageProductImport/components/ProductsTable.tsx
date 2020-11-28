@@ -22,7 +22,8 @@ export default function ProductsTable() {
 
   const onDelete = (id: string) => {
     axios.delete(`${API_PATHS.back_url}/products/${id}`)
-      .then(() => {
+      .then((response) => {
+        console.log(response);
         axios.get(`${API_PATHS.back_url}/products`)
           .then(res => setProducts(res.data));
         }
