@@ -212,7 +212,8 @@ resources:
             # TargetOriginId: WebApp
             TargetOriginId: myS3Origin
             ## The protocol that users can use to access the files in the origin. To allow HTTP use `allow-all`
-            ViewerProtocolPolicy: redirect-to-https
+            # ViewerProtocolPolicy: redirect-to-https
+            ViewerProtocolPolicy: allow-all
             Compress: true
             DefaultTTL: 0
           ## The certificate to use when viewers use HTTPS to request objects.

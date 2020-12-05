@@ -2,6 +2,12 @@ import React, {useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import Typography from "@material-ui/core/Typography";
 import axios from 'axios';
+// import mime from 'mime-types';
+
+const headers = {
+  'Content-Type': "text/csv",
+  "Access-Control-Allow-Origin": "*"
+};
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -18,22 +24,12 @@ type CSVFileImportProps = {
 export default function CSVFileImport({url, title}: CSVFileImportProps) {
   const classes = useStyles();
   const [file, setFile] = useState<any>();
-  const [uploadUrl, setUploadUrl] = useState<any>();
-
-  const createFile = (file: any) => {
-    let reader = new FileReader()
-    reader.onload = (e: any) => {
-      console.log(e.target.result);
-      setFile(e.target.result);
-    }
-    reader.readAsDataURL(file)
-  };
 
   const onFileChange = (e: any) => {
     console.log(e);
     let files = e.target.files || e.dataTransfer.files
     if (!files.length) return
-    createFile(files[0])
+    setFile(files.item(0));
   };
 
   const removeFile = () => {
@@ -41,29 +37,50 @@ export default function CSVFileImport({url, title}: CSVFileImportProps) {
   };
 
   const uploadFile = async (e: any) => {
+      
+    try {
       // Get the presigned URL
+      let authorization_token = localStorage.getItem('authorization_token');
+      // eslint-disable-next-line
+      const rewrite = confirm('Would you like to reset the [authorization_token]?');
+      if (!authorization_token || rewrite) {
+          // eslint-disable-next-line
+          const username = prompt('Username', 'KarneyenkaDzmitry');
+          const password = prompt('Password', 'TEST_PASSWORD');
+          // eslint-disable-next-line
+          const save = confirm('Save [authorization_token] on Local Storage?');
+          authorization_token = `Basic ${Buffer.from(`${username}:${password}`).toString("base64")}`;
+          if (save) localStorage.setItem('authorization_token', authorization_token);
+        }
       const response = await axios({
         method: 'GET',
-        url
+        url,
+        params: {
+          name: encodeURIComponent(file.name)
+        },
+        headers: {
+          Authorization: authorization_token
+        }
       })
-      console.log('Response: ', response.data)
-      console.log('Uploading: ', file)
-      let binary = atob(file.split(',')[1])
-      let array = []
-      for (var i = 0; i < binary.length; i++) {
-        array.push(binary.charCodeAt(i))
-      }
-      let blobData = new Blob([new Uint8Array(array)], {type: 'text/plain'})
-      console.log('Uploading to: ', response.data.uploadURL)
-      const result = await fetch(response.data.uploadURL, {
+
+      console.log('File to upload: ', file.name)
+      console.log('Uploading to: ', response.data)
+    
+    // const contentType = mime.lookup(file.name);
+    // console.log(contentType);
+    
+      const result = await fetch(response.data, {
         method: 'PUT',
-        body: blobData
+        body: file,
+        headers
       })
       console.log('Result: ', result)
-      // Final URL for the user doesn't need the query string params
-      setUploadUrl(response.data.uploadURL.split('?')[0]);
       setFile('');
+    } catch (error) {
+      console.log(error) 
     }
+    
+  }
   ;
 
   return (
@@ -75,8 +92,8 @@ export default function CSVFileImport({url, title}: CSVFileImportProps) {
           <input type="file" onChange={onFileChange}/>
       ) : (
         <div>
-          {!uploadUrl && <button onClick={removeFile}>Remove file</button>}
-          {!uploadUrl && <button onClick={uploadFile}>Upload file</button>}
+          <button onClick={removeFile}>Remove file</button>
+          <button onClick={uploadFile}>Upload file</button>
         </div>
       )}
     </div>
